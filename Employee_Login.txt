@@ -1,0 +1,147 @@
+--- SQL Database
+Create database HRIS
+use HRIS
+Create table Company
+(
+	Company_ID VARCHAR(30) primary key not null,
+	Company_Name VARCHAR(100) not null
+)
+Create table Employee
+(
+	Company_ID VARCHAR(30) not null,
+	Employee_login VARCHAR(30) primary key not null,
+	Employee_Name VARCHAR(100) not null,
+	Employee_Pwd VARCHAR(30) not null
+)
+
+insert into Company values('Comp1', 'My Company')
+insert into Employee values('Comp1','john','john bautista','!welcome')
+
+-------------------------------------------------------------------------------
+<!--ASP.NET-->
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>  
+  
+<!DOCTYPE html>  
+  
+<html xmlns="http://www.w3.org/1999/xhtml">  
+<head runat="server">  
+    <title></title>  
+    <style type="text/css">  
+        .auto-style1 {  
+            width: 100%;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <form id="form1" runat="server">  
+    <div>  
+      
+        <table class="auto-style1">  
+            <tr>  
+                <td colspan="6" style="text-align: center; vertical-align: top">  
+                    <asp:Label ID="Label1" runat="server" Font-Bold="True" Font-Size="XX-Large" Font-Underline="True" Text="Log In "></asp:Label>  
+                </td>  
+            </tr>  
+            <tr>  
+                <td> </td>  
+                <td style="text-align: center">  
+                    <asp:Label ID="Label2" runat="server" Font-Size="X-Large" Text="UserId :"></asp:Label>  
+                </td>  
+                <td style="text-align: center">  
+                    <asp:TextBox ID="TextBox1" runat="server" Font-Size="X-Large"></asp:TextBox>  
+                </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+            </tr>  
+            <tr>  
+                <td> </td>  
+                <td style="text-align: center">  
+                    <asp:Label ID="Label3" runat="server" Font-Size="X-Large" Text="Password :"></asp:Label>  
+                </td>  
+                <td style="text-align: center">  
+                    <asp:TextBox ID="TextBox2" runat="server" Font-Size="X-Large" TextMode="Password"></asp:TextBox>  
+                </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+            </tr>  
+            <tr>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+            </tr>  
+            <tr>  
+                <td> </td>  
+                <td> </td>  
+                <td style="text-align: center">  
+                    <asp:Button ID="Button1" runat="server" BorderStyle="None" Font-Size="X-Large" OnClick="Button1_Click" Text="Log In" />  
+                </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+            </tr>  
+            <tr>  
+                <td> </td>  
+                <td> </td>  
+                <td>  
+                    <asp:Label ID="Label4" runat="server" Font-Size="X-Large"></asp:Label>  
+                </td>  
+                <td> </td>  
+                <td> </td>  
+                <td> </td>  
+            </tr>  
+        </table>  
+      
+    </div>  
+    </form>  
+</body>  
+</html>  
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+<!--Web Config -->
+
+<connectionStrings>  
+    <add name="hrcon" connectionString="server=MYSERVER\SQLEXPRESS;database=HRIS;integrated security=true;" />  
+</connectionStrings> 
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+//C#.NET
+
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace employeelogin
+{
+	public class employeelogin
+	{
+		SqlConnection sconn = new SqlConnection(ConfigurationManager.ConnectionStrings["hrcon"].ToString());
+
+		protected void Button1_Click(object sender, EventArgs e)
+		{
+			string emp_id = TextBox1.Text;
+			string emp_pwd = TextBox2.Text;
+			sconn.Open();
+			string sqlqry= "select * from Employee where Employee_login='" + emp_id + "' and Employee_Pwd='" + emp_pwd + "'";
+			SqlCommand scomm = new SqlCommand(sqlqry,sconn);
+			SqlDataReader sqldred = scomm.ExecuteReader();
+			if(sqlred.Read())
+			{
+				Label4.Text = "Successfully Login...";
+			}
+			else
+			{
+				Label4.Text = "Invalid Username and Password...";
+			}
+		}
+
+
+
+		
+	}
+} 
